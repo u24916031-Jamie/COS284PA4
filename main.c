@@ -9,12 +9,22 @@ typedef struct { int from; int to; char symbol; } Transition;
 typedef struct { State* states; Transition* transitions;
                  int numStates; int numTransitions; int startState; } DFA;
 extern DFA* readDfa(const char* filename);
+
 extern bool simulateDfa(DFA* dfa, const char* input);
 int main(int argc, char** argv){
   DFA* d = readDfa(argv[1]);
+
   if(!d){ printf("could not read %s\n", argv[1]); return 1; }
   printf("states=%d transitions=%d start=%d\n",
-         d->numStates, d->numTransitions, d->startState);
+	d->numStates, d->numTransitions, d->startState);
+	for (int i=0;i<d->numStates;i++){
+		printf("%d,%d\n", d->states[i].id,d->states[i].isAccepting);
+	}
+	for (int i=0;i<d->numTransitions;i++){
+		printf("%d,%d,%c\n", d->transitions[i].from, d->transitions[i].to, d->transitions[i].symbol);
+	}
+
   printf("accepts \"%s\": %d\n", argv[2], simulateDfa(d, argv[2]));
+
   return 0;
 }
